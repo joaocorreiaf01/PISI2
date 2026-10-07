@@ -1,0 +1,15 @@
+seed: 713901
+ 2 pontos... A B | custo 14 | 0 colisões | 0.000 s
+ 3 pontos... A B C | custo 16 | 0 colisões | 0.000 s
+ 4 pontos... B A C D | custo 12 | 0 colisões | 0.000 s
+ 5 pontos... A C E D B | custo 18 | 0 colisões | 0.000 s
+ 6 pontos... D C A E B F | custo 18 | 2 colisões | 0.001 s
+ 7 pontos... B A D F E C G | custo 12 | 1 colisões | 0.005 s
+ 8 pontos... C F E A H B G D | custo 20 | 2 colisões | 0.047 s
+ 9 pontos... E A B I G C F D H | custo 22 | 5 colisões | 0.468 s
+10 pontos... D E G B A H F I C J | custo 20 | 0 colisões | 5.246 s
+11 pontos... A I F K B C D H E G J | custo 20 | 3 colisões | 63.202 s
+12 pontos... D E H F K G J B L A C I | custo 20 | 6 colisões | 775.013 s
+13 pontos... B C H J K A I G F L D M E | custo 20 | 4 colisões | 10299.152 s
+14 pontos... interrompido
+total de colisões: 25
