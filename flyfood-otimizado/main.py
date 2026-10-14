@@ -12,6 +12,21 @@ from matriz.matriz import LETRAS, encontrar_origem, ler_matriz, sortear_pontos
 from rota.rota import forca_bruta
 
 ARQUIVO_ENTRADA = os.path.join(PASTA, "data", "entrada", "matriz.txt")
+SAIDA_SEM_OTIMIZACAO = os.path.join(PASTA, "..", "flyfood-sem-otimizacao", "data", "saida")
+
+
+def ler_seed_sem_otimizacao():
+    # Pega a seed do log mais recente do não otimizado (o nome do log tem data e hora)
+    logs = sorted(nome for nome in os.listdir(SAIDA_SEM_OTIMIZACAO) if nome.endswith(".log"))
+    if not logs:
+        return None, None
+
+    with open(os.path.join(SAIDA_SEM_OTIMIZACAO, logs[-1])) as arquivo:
+        for linha in arquivo:
+            if linha.startswith("seed:"):
+                return logs[-1], int(linha.split()[1])
+
+    return None, None
 
 
 def escrever(log, texto):
@@ -32,13 +47,18 @@ def main():
     matriz = ler_matriz(ARQUIVO_ENTRADA)
     origem = encontrar_origem(matriz)
 
-    seed = random.randint(0, 999999)
+    # Usa a mesma seed do não otimizado: assim cada rodada sorteia os mesmos pontos
+    log_origem, seed = ler_seed_sem_otimizacao()
+    if seed is None:
+        seed = random.randint(0, 999999)
     random.seed(seed)
 
     nome_log = "execucao_" + datetime.now().strftime("%Y%m%d_%H%M%S") + ".log"
     log = open(os.path.join(PASTA, "data", "saida", nome_log), "w")
 
     escrever(log, f"seed: {seed}\n")
+    if log_origem:
+        escrever(log, f"mesmos pontos do não otimizado: {log_origem}\n")
     total_colisoes = 0
     quantidade = 2
 
