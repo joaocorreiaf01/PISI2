@@ -9,14 +9,14 @@ PASTA = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(PASTA, "src"))
 
 from matriz.matriz import LETRAS, encontrar_origem, ler_matriz, sortear_pontos
-from rota.rota import forca_bruta
+from rota.rota import genetico
 
 ARQUIVO_ENTRADA = os.path.join(PASTA, "data", "entrada", "matriz.txt")
 SAIDA_SEM_OTIMIZACAO = os.path.join(PASTA, "..", "flyfood-sem-otimizacao", "data", "saida")
 
 
 def ler_seed_sem_otimizacao():
-    # Pega a seed do log mais recente do não otimizado (o nome do log tem data e hora)
+    # Pega a seed do log mais recente do não otimizado
     logs = sorted(nome for nome in os.listdir(SAIDA_SEM_OTIMIZACAO) if nome.endswith(".log"))
     if not logs:
         return None, None
@@ -30,24 +30,22 @@ def ler_seed_sem_otimizacao():
 
 
 def escrever(log, texto):
-    # Escreve no terminal e no log ao mesmo tempo, para acompanhar o andamento
+    # Escreve no terminal e no log
     try:
         print(texto, end="", flush=True)
     except OSError:
-        # Terminal já foi fechado: segue gravando só no log
         pass
     log.write(texto)
     log.flush()
 
 
 def main():
-    # Fechar o terminal não para o programa; só o Ctrl+C interrompe
     signal.signal(signal.SIGHUP, signal.SIG_IGN)
 
     matriz = ler_matriz(ARQUIVO_ENTRADA)
     origem = encontrar_origem(matriz)
 
-    # Usa a mesma seed do não otimizado: assim cada rodada sorteia os mesmos pontos
+    # Usa a mesma seed do não otimizado para cada rodada sortear os mesmos pontos
     log_origem, seed = ler_seed_sem_otimizacao()
     if seed is None:
         seed = random.randint(0, 999999)
@@ -69,7 +67,7 @@ def main():
             escrever(log, f"{quantidade:>2} pontos... ")
 
             inicio = time.time()
-            rota, custo = forca_bruta(origem, pontos)
+            rota, custo = genetico(origem, pontos)
             tempo = time.time() - inicio
 
             escrever(log, f"R {' '.join(rota)} R | custo {custo} | {colisoes} colisões | {tempo:.3f} s\n")

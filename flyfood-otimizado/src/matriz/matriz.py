@@ -6,7 +6,7 @@ LETRAS = "ABCDEFGHIJKLMNOPQSTUVWXYZ"  # sem o R, que é a origem
 def ler_matriz(caminho):
     with open(caminho) as arquivo:
         linhas = [linha.split() for linha in arquivo if linha.strip()]
-    return linhas[1:]  # a primeira linha só tem as dimensões
+    return linhas[1:]
 
 
 def encontrar_origem(matriz):
@@ -17,7 +17,6 @@ def encontrar_origem(matriz):
 
 
 def sortear_pontos(matriz, quantidade):
-    # Sorteia posições aleatórias; se cair numa posição já ocupada, é uma colisão
     ocupadas = [encontrar_origem(matriz)]
     pontos = {}
     colisoes = 0
