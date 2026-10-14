@@ -52,7 +52,7 @@ def main():
             rota, custo = forca_bruta(origem, pontos)
             tempo = time.time() - inicio
 
-            escrever(log, f"{' '.join(rota)} | custo {custo} | {colisoes} colisões | {tempo:.3f} s\n")
+            escrever(log, f"R {' '.join(rota)} R | custo {custo} | {colisoes} colisões | {tempo:.3f} s\n")
             quantidade += 1
 
     except KeyboardInterrupt:
