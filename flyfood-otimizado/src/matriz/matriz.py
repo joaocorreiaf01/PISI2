@@ -16,14 +16,14 @@ def encontrar_origem(matriz):
                 return (i, j)
 
 
-def sortear_pontos(matriz, quantidade):
+def sortear_pontos(matriz, quantidade, gerador=random):
     ocupadas = [encontrar_origem(matriz)]
     pontos = {}
     colisoes = 0
 
     while len(pontos) < quantidade:
-        i = random.randint(0, len(matriz) - 1)
-        j = random.randint(0, len(matriz[0]) - 1)
+        i = gerador.randint(0, len(matriz) - 1)
+        j = gerador.randint(0, len(matriz[0]) - 1)
 
         if (i, j) in ocupadas:
             colisoes += 1
