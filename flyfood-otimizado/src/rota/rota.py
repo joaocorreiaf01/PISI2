@@ -1,10 +1,9 @@
 import random
-from itertools import permutations
 
 from deap import algorithms, base, creator, tools
 
-TAMANHO_POPULACAO = 200
-NUM_GERACOES = 100
+TAMANHO_POPULACAO = 500
+NUM_GERACOES = 200
 PROB_CROSSOVER = 0.8
 PROB_MUTACAO = 0.2
 
@@ -16,57 +15,40 @@ def distancia(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def custo_da_rota(rota, origem, pontos):
+def custo_da_rota(rota, origem):
     custo = 0
     atual = origem
-    for letra in rota:
-        custo += distancia(atual, pontos[letra])
-        atual = pontos[letra]
+    for posicao in rota:
+        custo += distancia(atual, posicao)
+        atual = posicao
     custo += distancia(atual, origem)
     return custo
 
 
-def forca_bruta(origem, pontos):
-    melhor_rota = None
-    menor_custo = None
-
-    for rota in permutations(pontos):
-        custo = custo_da_rota(rota, origem, pontos)
-        if menor_custo is None or custo < menor_custo:
-            menor_custo = custo
-            melhor_rota = rota
-
-    return melhor_rota, menor_custo
-
-
-def preparar_genetico(origem, pontos):
+def genetico(origem, pontos):
     letras = list(pontos)
+    posicoes = list(pontos.values())
     n = len(letras)
 
+    def nova_rota():
+        return random.sample(range(n), n)
+
     def avaliar(individuo):
-        rota = [letras[i] for i in individuo]
-        return (custo_da_rota(rota, origem, pontos),)
+        rota = [posicoes[i] for i in individuo]
+        return (custo_da_rota(rota, origem),)
 
     toolbox = base.Toolbox()
-    toolbox.register("indices", random.sample, range(n), n)
-    toolbox.register("individuo", tools.initIterate, creator.Individuo, toolbox.indices)
-    toolbox.register("populacao", tools.initRepeat, list, toolbox.individuo)
+    toolbox.register("individuo", tools.initIterate, creator.Individuo, nova_rota)
     toolbox.register("evaluate", avaliar)
     toolbox.register("mate", tools.cxPartialyMatched)  # PMX
-    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)  # troca de posições
+    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=1.0 / n)  # troca de posições
     toolbox.register("select", tools.selTournament, tournsize=3)
 
-    return toolbox, letras
-
-
-def genetico(origem, pontos):
-    toolbox, letras = preparar_genetico(origem, pontos)
-    populacao = toolbox.populacao(n=TAMANHO_POPULACAO)
-    melhores = tools.HallOfFame(1)  # guarda o melhor indivíduo de todas as gerações
-
+    populacao = [toolbox.individuo() for _ in range(TAMANHO_POPULACAO)]
+    melhor = tools.HallOfFame(1)  # guarda o melhor indivíduo de todas as gerações
     algorithms.eaSimple(populacao, toolbox, cxpb=PROB_CROSSOVER, mutpb=PROB_MUTACAO,
-                        ngen=NUM_GERACOES, halloffame=melhores, verbose=False)
+                        ngen=NUM_GERACOES, halloffame=melhor, verbose=False)
 
-    melhor = melhores[0]
-    rota = tuple(letras[i] for i in melhor)
-    return rota, int(melhor.fitness.values[0])
+    melhor_rota = [letras[i] for i in melhor[0]]
+    melhor_custo = int(melhor[0].fitness.values[0])
+    return melhor_rota, melhor_custo
