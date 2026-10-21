@@ -4,7 +4,7 @@ Encontra a menor rota do drone usando **distância de Manhattan**, comparando du
 
 ```
 flyfood-sem-otimizacao/ -> força bruta (testa todas as ordens possíveis dos pontos)
-flyfood-otimizado/      -> algoritmo genético (em desenvolvimento)
+flyfood-otimizado/      -> algoritmo genético (DEAP)
 ```
 
 Cada pasta é um projeto independente, com a mesma estrutura:
@@ -19,7 +19,10 @@ data/saida/          -> um log por execução (resultados)
 
 ## Como rodar
 
+O otimizado usa a biblioteca DEAP:
+
 ```bash
+pip install -r requirements.txt
 python3 flyfood-sem-otimizacao/main.py
 python3 flyfood-otimizado/main.py
 ```
@@ -30,3 +33,20 @@ conta como **colisão** e sorteia de novo. Para parar, aperte **Ctrl+C**.
 
 Cada rodada é salva no log (`data/saida/` da pasta que foi executada) com a rota, o custo,
 as colisões e o tempo. No início fica a seed do sorteio e, no final, o total de colisões.
+
+## Algoritmo genético
+
+Cada indivíduo é uma ordem de visita dos pontos (uma permutação) e o fitness é o custo da rota,
+que deve ser o menor possível.
+
+```
+população     -> 500 indivíduos
+gerações      -> 200
+cruzamento    -> PMX, com probabilidade 0.8
+mutação       -> troca de posições, com probabilidade 0.2 (indpb = 1/n)
+seleção       -> torneio de 3
+```
+
+O otimizado usa a mesma seed do log mais recente do não otimizado, então cada rodada sorteia os
+mesmos pontos. No log, cada rodada mostra o custo ótimo encontrado pela força bruta e quanto o
+genético ficou acima dele (ou `sem força bruta` quando a força bruta não chegou naquela rodada).
