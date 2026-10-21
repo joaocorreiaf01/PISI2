@@ -49,6 +49,8 @@ def main():
     log_origem, seed = ler_seed_sem_otimizacao()
     if seed is None:
         seed = random.randint(0, 999999)
+    # Gerador só para o sorteio: o DEAP também usa o random e mudaria os pontos das rodadas seguintes
+    sorteio = random.Random(seed)
     random.seed(seed)
 
     nome_log = "execucao_" + datetime.now().strftime("%Y%m%d_%H%M%S") + ".log"
@@ -62,7 +64,7 @@ def main():
 
     try:
         while quantidade <= len(LETRAS):
-            pontos, colisoes = sortear_pontos(matriz, quantidade)
+            pontos, colisoes = sortear_pontos(matriz, quantidade, sorteio)
             total_colisoes += colisoes
             escrever(log, f"{quantidade:>2} pontos... ")
 
