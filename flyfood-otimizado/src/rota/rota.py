@@ -3,8 +3,8 @@ from itertools import permutations
 
 from deap import algorithms, base, creator, tools
 
-TAMANHO_POPULACAO = 200
-NUM_GERACOES = 100
+TAMANHO_POPULACAO = 500
+NUM_GERACOES = 200
 PROB_CROSSOVER = 0.8
 PROB_MUTACAO = 0.2
 
@@ -53,7 +53,7 @@ def preparar_genetico(origem, pontos):
     toolbox.register("populacao", tools.initRepeat, list, toolbox.individuo)
     toolbox.register("evaluate", avaliar)
     toolbox.register("mate", tools.cxPartialyMatched)  # PMX
-    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)  # troca de posições
+    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=1.0 / n)  # troca de posições
     toolbox.register("select", tools.selTournament, tournsize=3)
 
     return toolbox, letras
