@@ -1,0 +1,27 @@
+seed: 713901
+mesmos pontos do não otimizado: execucao_20261007_031022.log
+ 2 pontos... R A B R | custo 14 | ótimo 14 (igual) | 0 colisões | 0.725 s
+ 3 pontos... R B A C R | custo 16 | ótimo 16 (igual) | 0 colisões | 0.750 s
+ 4 pontos... R D C A B R | custo 12 | ótimo 12 (igual) | 0 colisões | 0.778 s
+ 5 pontos... R B D C E A R | custo 18 | ótimo 18 (igual) | 0 colisões | 0.822 s
+ 6 pontos... R D C A E B F R | custo 18 | ótimo 18 (igual) | 2 colisões | 0.856 s
+ 7 pontos... R C A F D E B G R | custo 12 | ótimo 12 (igual) | 1 colisões | 0.889 s
+ 8 pontos... R D C F E H A B G R | custo 20 | ótimo 20 (igual) | 2 colisões | 0.930 s
+ 9 pontos... R H D F C G I B A E R | custo 22 | ótimo 22 (igual) | 5 colisões | 0.960 s
+10 pontos... R D J C G B I F A H E R | custo 20 | ótimo 20 (igual) | 0 colisões | 0.992 s
+11 pontos... R J G E H D C B K F I A R | custo 20 | ótimo 20 (igual) | 3 colisões | 1.028 s
+12 pontos... R D I C A L B J G K F H E R | custo 22 | ótimo 20 (+2) | 6 colisões | 1.057 s
+13 pontos... R E M D F L I A K J H C G B R | custo 22 | ótimo 20 (+2) | 4 colisões | 1.099 s
+14 pontos... R A K D M I F G H N J B C L E R | custo 24 | sem força bruta | 2 colisões | 1.131 s
+15 pontos... R B A J K I E D O H C G N M F L R | custo 26 | sem força bruta | 6 colisões | 1.159 s
+16 pontos... R L F D G H J B K O P I E C N M A R | custo 26 | sem força bruta | 15 colisões | 1.201 s
+17 pontos... R P O C F Q K L N J H E A D B I M G R | custo 24 | sem força bruta | 11 colisões | 1.246 s
+18 pontos... R B I E A D S J F O G P L K Q H M N C R | custo 28 | sem força bruta | 10 colisões | 1.282 s
+19 pontos... R I G Q D N A J T L O S P H B K M E F C R | custo 30 | sem força bruta | 6 colisões | 1.313 s
+20 pontos... R L C H N U Q J F E D B G M P K O A T S I R | custo 32 | sem força bruta | 16 colisões | 1.348 s
+21 pontos... R U V E C K O T F H I M Q P A B S D N J G L R | custo 30 | sem força bruta | 21 colisões | 1.384 s
+22 pontos... R H A T P J I G B V F C O K Q U S E N W D L M R | custo 32 | sem força bruta | 23 colisões | 1.410 s
+23 pontos... R N P C E G L M J H V T D F A K I S O W Q X B U R | custo 32 | sem força bruta | 41 colisões | 1.441 s
+24 pontos... R A E F B J K T W O C Q Y V P S H M L D I U N G X R | custo 34 | sem força bruta | 40 colisões | 1.478 s
+25 pontos... R H P N X D L T A V S W C M Z K Q I B O F G U Y E J R | custo 32 | sem força bruta | 13 colisões | 1.523 s
+total de colisões: 227
