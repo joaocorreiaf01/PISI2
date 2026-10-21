@@ -15,18 +15,33 @@ ARQUIVO_ENTRADA = os.path.join(PASTA, "data", "entrada", "matriz.txt")
 SAIDA_SEM_OTIMIZACAO = os.path.join(PASTA, "..", "flyfood-sem-otimizacao", "data", "saida")
 
 
-def ler_seed_sem_otimizacao():
-    # Pega a seed do log mais recente do não otimizado
+def ler_log_sem_otimizacao():
+    # Pega a seed e o custo ótimo de cada rodada do log mais recente do não otimizado
     logs = sorted(nome for nome in os.listdir(SAIDA_SEM_OTIMIZACAO) if nome.endswith(".log"))
     if not logs:
-        return None, None
+        return None, None, {}
 
+    seed = None
+    custos = {}
     with open(os.path.join(SAIDA_SEM_OTIMIZACAO, logs[-1])) as arquivo:
         for linha in arquivo:
             if linha.startswith("seed:"):
-                return logs[-1], int(linha.split()[1])
+                seed = int(linha.split()[1])
+            elif "| custo " in linha:
+                quantidade = int(linha.split()[0])
+                custos[quantidade] = int(linha.split("| custo ")[1].split()[0])
 
-    return None, None
+    if seed is None:
+        return None, None, {}
+    return logs[-1], seed, custos
+
+
+def comparar(custo, otimo):
+    if otimo is None:
+        return "sem força bruta"
+    if custo == otimo:
+        return f"ótimo {otimo} (igual)"
+    return f"ótimo {otimo} (+{custo - otimo})"
 
 
 def escrever(log, texto):
@@ -46,7 +61,7 @@ def main():
     origem = encontrar_origem(matriz)
 
     # Usa a mesma seed do não otimizado para cada rodada sortear os mesmos pontos
-    log_origem, seed = ler_seed_sem_otimizacao()
+    log_origem, seed, custos_otimos = ler_log_sem_otimizacao()
     if seed is None:
         seed = random.randint(0, 999999)
     # Gerador só para o sorteio: o DEAP também usa o random e mudaria os pontos das rodadas seguintes
@@ -72,7 +87,8 @@ def main():
             rota, custo = genetico(origem, pontos)
             tempo = time.time() - inicio
 
-            escrever(log, f"R {' '.join(rota)} R | custo {custo} | {colisoes} colisões | {tempo:.3f} s\n")
+            comparacao = comparar(custo, custos_otimos.get(quantidade))
+            escrever(log, f"R {' '.join(rota)} R | custo {custo} | {comparacao} | {colisoes} colisões | {tempo:.3f} s\n")
             quantidade += 1
 
     except KeyboardInterrupt:
