@@ -24,7 +24,7 @@ def main():
 
     linhas = [
         f"seed: {SEED}",
-        f"OX + inversão + inserção | custo {custo} | ótimo {OTIMO_CONHECIDO} | {acima:.1f}% acima | {tempo:.1f} s",
+        f"OX + inversão + inserção + 2-opt | custo {custo} | ótimo {OTIMO_CONHECIDO} | {acima:.1f}% acima | {tempo:.1f} s",
         f"rota: {' '.join(str(cidade) for cidade in rota)}",
     ]
     print("\n".join(linhas))
