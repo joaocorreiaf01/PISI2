@@ -1,3 +1,5 @@
+from functools import partial
+
 from deap import algorithms, base, creator, tools
 
 from lerBrasil58 import custoCaminho, inicializaPopulacao
@@ -13,18 +15,25 @@ def algoritmoGenetico(dicDistancias, qtdeCidades, tamanhoPopulacao=200, geracoes
     toolbox = base.Toolbox()
     toolbox.register("evaluate", lambda individuo: (custoCaminho(individuo, dicDistancias),))
     toolbox.register("mate", cruzamentoOX)
+    toolbox.register("select", tools.selTournament, tournsize=3)
     #a py2opt usa matriz de distancias, entao monta ela a partir do dicionario
     matrizDistancias = [[0] * qtdeCidades for _ in range(qtdeCidades)]
     for (i, j), peso in dicDistancias.items():
         matrizDistancias[i - 1][j - 1] = peso
-    toolbox.register("mutate", mutacaoCom2opt, matrizDistancias=matrizDistancias)
-    toolbox.register("select", tools.selTournament, tournsize=3)
 
     populacao = [creator.Individuo(rota) for rota in inicializaPopulacao(tamanhoPopulacao, qtdeCidades)]
     melhor = tools.HallOfFame(1)
-    #laco do AG junta pais e filhos e escolhe os sobreviventes pelo torneio
-    algorithms.eaMuPlusLambda(populacao, toolbox, mu=tamanhoPopulacao, lambda_=tamanhoPopulacao,
-                              cxpb=probCruzamento, mutpb=probMutacao, ngen=geracoes,
-                              halloffame=melhor, verbose=False)
+
+    #cada fase roda algumas geracoes com um operador de mutacao
+    fases = [(partial(mutacaoCom2opt, matrizDistancias=matrizDistancias), geracoes)]
+    for operadorMutacao, qtdeGeracoes in fases:
+        if qtdeGeracoes <= 0:
+            continue
+        toolbox.register("mutate", operadorMutacao)
+        #laco do AG junta pais e filhos e escolhe os sobreviventes pelo torneio
+        populacao, _ = algorithms.eaMuPlusLambda(populacao, toolbox, mu=tamanhoPopulacao,
+                                                 lambda_=tamanhoPopulacao, cxpb=probCruzamento,
+                                                 mutpb=probMutacao, ngen=qtdeGeracoes,
+                                                 halloffame=melhor, verbose=False)
 
     return list(melhor[0]), int(melhor[0].fitness.values[0])
