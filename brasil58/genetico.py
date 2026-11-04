@@ -7,7 +7,7 @@ creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 creator.create("Individuo", list, fitness=creator.FitnessMin)
 
 
-def algoritmoGenetico(dicDistancias, qtdeCidades, tamanhoPopulacao=200, geracoes=1000,
+def algoritmoGenetico(dicDistancias, qtdeCidades, tamanhoPopulacao=200, geracoes=750,
                       probCruzamento=0.3, probMutacao=0.7):
     toolbox = base.Toolbox()
     toolbox.register("evaluate", lambda individuo: (custoCaminho(individuo, dicDistancias),))
