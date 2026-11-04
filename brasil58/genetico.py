@@ -3,7 +3,7 @@ from functools import partial
 from deap import algorithms, base, creator, tools
 
 from lerBrasil58 import custoCaminho, inicializaPopulacao
-from operadores import cruzamentoOX, mutacaoCom2opt
+from operadores import cruzamentoOX, mutacao, mutacaoCom2opt
 
 #objetivo é minimizar o custo, por isso o peso -1
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -11,7 +11,7 @@ creator.create("Individuo", list, fitness=creator.FitnessMin)
 
 
 def algoritmoGenetico(dicDistancias, qtdeCidades, tamanhoPopulacao=200, geracoes=20,
-                      probCruzamento=0.3, probMutacao=0.7):
+                      geracoesCom2opt=5, probCruzamento=0.3, probMutacao=0.7):
     toolbox = base.Toolbox()
     toolbox.register("evaluate", lambda individuo: (custoCaminho(individuo, dicDistancias),))
     toolbox.register("mate", cruzamentoOX)
@@ -24,8 +24,10 @@ def algoritmoGenetico(dicDistancias, qtdeCidades, tamanhoPopulacao=200, geracoes
     populacao = [creator.Individuo(rota) for rota in inicializaPopulacao(tamanhoPopulacao, qtdeCidades)]
     melhor = tools.HallOfFame(1)
 
-    #cada fase roda algumas geracoes com um operador de mutacao
-    fases = [(partial(mutacaoCom2opt, matrizDistancias=matrizDistancias), geracoes)]
+    #o 2-opt e caro, entao as primeiras geracoes usam so a mutacao simples
+    #e a busca local entra apenas nas ultimas geracoesCom2opt geracoes
+    fases = [(mutacao, geracoes - geracoesCom2opt),
+             (partial(mutacaoCom2opt, matrizDistancias=matrizDistancias), geracoesCom2opt)]
     for operadorMutacao, qtdeGeracoes in fases:
         if qtdeGeracoes <= 0:
             continue
