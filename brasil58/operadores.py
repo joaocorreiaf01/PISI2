@@ -1,6 +1,7 @@
 import random
 
 from deap import tools
+from py2opt.solver import Solver
 
 
 def cruzamentoOX(pai1, pai2):
@@ -30,3 +31,18 @@ def mutacaoInsercao(individuo):
 
 def mutacao(individuo):
     return random.choice([mutacaoInversao, mutacaoInsercao])(individuo)
+
+
+def buscaLocal2opt(rota, matrizDistancias):
+    #testa inverter trechos da rota e mantem quando encurta o caminho
+    #py2opt tambem espera cidades de 0 a n-1
+    melhorRota, _, _ = Solver(matrizDistancias, [cidade - 1 for cidade in rota]).two_opt(improvement_threshold=0)
+    rota[:] = [cidade + 1 for cidade in melhorRota]
+    return rota
+
+
+def mutacaoCom2opt(individuo, matrizDistancias):
+    #depois da mutacao a rota passa pelo 2-opt
+    mutacao(individuo)
+    buscaLocal2opt(individuo, matrizDistancias)
+    return individuo,
